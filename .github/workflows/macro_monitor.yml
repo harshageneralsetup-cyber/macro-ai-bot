@@ -3,7 +3,7 @@ name: AI Macro Briefing Automation
 on:
   schedule:
     # Runs at 02:30 AM UTC (8:00 AM IST) Monday through Friday
-    - cron: '30 2 * * 1-5'
+    - cron: '15 3 * * 1-5'
   workflow_dispatch: # Allows you to trigger the script manually from GitHub UI anytime
 
 jobs:
