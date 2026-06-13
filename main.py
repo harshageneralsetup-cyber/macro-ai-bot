@@ -18,9 +18,10 @@ if not os.getenv("GEMINI_API_KEY"):
 client = genai.Client()
 
 def fetch_live_market_data():
-    """Extracts live financial data and official central bank policy interest rates."""
+    """Extracts live financial data, yield dynamics, and official central bank policy interest rates."""
     data = {
         "brent": 87.50, 
+        "us3y": "4.21%",
         "us10y": "4.48%", 
         "dxy": "99.90",
         "fed_rate": "3.50% - 3.75%",  
@@ -38,15 +39,23 @@ def fetch_live_market_data():
         except Exception:
             pass
 
-        # 2. US 10-Year Bond Yield
+        # 2. US 3-Year Bond Yield (Using Treasury Yield 5Y Ticker ^FVX or corresponding short duration data index)
         try:
-            yield_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/^TNX", timeout=5)
-            price = yield_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
-            data["us10y"] = f"{price}%"
+            yield3_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/^FVX", timeout=5)
+            price3 = yield3_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
+            data["us3y"] = f"{price3}%"
         except Exception:
             pass
 
-        # 3. US Dollar Index
+        # 3. US 10-Year Bond Yield
+        try:
+            yield10_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/^TNX", timeout=5)
+            price10 = yield10_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
+            data["us10y"] = f"{price10}%"
+        except Exception:
+            pass
+
+        # 4. US Dollar Index
         try:
             dxy_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB", timeout=5)
             price = dxy_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
@@ -54,7 +63,7 @@ def fetch_live_market_data():
         except Exception:
             pass
 
-        # 4. Official Federal Reserve Effective Target Range via New York Fed API
+        # 5. Official Federal Reserve Effective Target Range via New York Fed API
         try:
             fed_req = session.get("https://markets.newyorkfed.org/api/ambs/all/latest.json", timeout=5)
             if fed_req.status_code == 200:
@@ -62,7 +71,7 @@ def fetch_live_market_data():
         except Exception:
             pass
 
-        # 5. RBI Interest Rate Context Verification via Financial Feed Structures
+        # 6. RBI Interest Rate Context Verification via Financial Feed Structures
         try:
             rbi_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/INR=X", timeout=5)
             if rbi_req.status_code == 200:
@@ -105,6 +114,7 @@ def generate_ai_summary(prices, narratives):
     - US Federal Reserve Target Rate: {prices['fed_rate']}
     - RBI Repo Rate: {prices['rbi_rate']}
     - Brent Crude Oil: ${prices['brent']:.2f}
+    - US 3-Year Bond Yield: {prices['us3y']}
     - US 10-Year Bond Yield: {prices['us10y']}
     - US Dollar Index (DXY): {prices['dxy']}
 
@@ -122,7 +132,7 @@ def generate_ai_summary(prices, narratives):
     STRICT BOLDING AND LAYOUT RULES FOR SECTORS AND PIVOT TRIGGERS:
     - ONLY the sector names or conditional triggers themselves must be bolded. 
     - The structural definition text or description immediately following the bold element MUST NOT contain bold markdown asterisks (**). Keep description text entirely normal.
-    - Example of correct format for Sector: * **IT Services**: A DXY at 99.807 provides tailwinds for export-oriented margins...
+    - Example of correct format for Sector: * **IT Services**: A DXY at 99.90 provides tailwinds for export-oriented margins...
     - Example of correct format for Pivot Trigger: * 🤝 **If Peace Deal Finalizes**: Crude slides to $70, triggering massive IT rally.
     - Do NOT put a blank line or a new paragraph break immediately after a bullet point (*). Keep the bullet point and its text on the exact same line.
     - Keep structural section headers entirely on their own single line.
@@ -133,7 +143,7 @@ def generate_ai_summary(prices, narratives):
     * 🏛️ **Interest Rates**: Global Fed Rate is at {prices['fed_rate']} and RBI Repo Rate is at {prices['rbi_rate']}. Provide a 1-sentence data-driven verdict analyzing how this exact policy setup directly impacts corporate cost of capital, domestic banking liquidity, and the timing of local monetary policy adjustments.
     * 🛢️ **Oil (Brent)**: ${prices['brent']:.2f} | Provide a crisp, data-backed assessment tracking this active pricing line against India's fiscal threshold, raw material inputs, and domestic corporate margin outlooks.
     * 💵 **Dollar Index (DXY)**: {prices['dxy']} | Detail the exact impact regarding immediate USD/INR currency tracking limits, FII net capital flows, and domestic volatility triggers.
-    * 📈 **US Bond Yields (10Y)**: {prices['us10y']} | Provide the global yield context and explain how the India-US yield spread dynamics compress or support Nifty valuation setups.
+    * 📈 **US Bond Yields (10Y & 3Y)**: 10Y at {prices['us10y']} | 3Y at {prices['us3y']} | Provide the global yield context and explicitly analyze the spread profile between the 3Y short-term yield and 10Y long-term yield. Explain how these yield dynamics compress or support Nifty valuation setups and FII debt/equity cross-border flows.
     * 🎈 **Inflation**: Provide a sharp macro comparison matching sticky global consumer indices against India's local retail CPI data trajectories.
 
     📰 **Latest Global Context Indicators:**
@@ -153,9 +163,6 @@ def generate_ai_summary(prices, narratives):
     📊 **SUMMARY CHECKLIST & PIVOT TRIGGERS**
     * 🤝 **[Insert Bullish/Peace Macro Condition]**: Provide a highly precise, 1-sentence conditional macro trigger outlining a major scenario shift (e.g., peace breakthrough, unexpected commodity drops, or sudden Fed policy pivots) and its direct domino effect on a key Indian stock index or specific market sector. No bold text inside the description statement.
     * ⚠️ **[Insert Bearish/Escalation Macro Condition]**: Provide a highly precise, 1-sentence conditional macro trigger outlining an opposing risk scenario shift (e.g., breakdown in talks, crude testing technical resistance, or sharp spikes in global yields) and how it accelerates domestic volatility or capital outflows. No bold text inside the description statement.
-
-    🌮 **Donald's Wildcard Corner**
-    * 🗣️ **The Presidential Proclamation**: Write a funny, highly satirical, over-the-top, fictional parody quote mimicking Donald Trump's signature speaking style (using words like "tremendous", "nobody knows more about", "beautiful"). The premise MUST showcase him starting off talking tough about oil, tariffs, or central bank interest rates, but then completely chickens out at the end using a hilarious, fragile excuse (e.g., claiming he's walking away from the negotiation or conflict because he needs to check out a taco stand, or because the taco makers were too nice to fight, or running away to protect his beautiful taco recipes). Keep it to exactly 2 punchy, highly entertaining sentences.
     """
 
     try:
