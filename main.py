@@ -28,44 +28,47 @@ def fetch_live_market_data():
     }
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
     
-    # 1. Crude Brent Pricing
-    try:
-        oil_req = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/BZ=F", headers=headers, timeout=5)
-        data["brent"] = float(oil_req.json()['chart']['result'][0]['meta']['regularMarketPrice'])
-    except Exception:
-        pass
+    with requests.Session() as session:
+        session.headers.update(headers)
+        
+        # 1. Crude Brent Pricing
+        try:
+            oil_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/BZ=F", timeout=5)
+            data["brent"] = float(oil_req.json()['chart']['result'][0]['meta']['regularMarketPrice'])
+        except Exception:
+            pass
 
-    # 2. US 10-Year Bond Yield
-    try:
-        yield_req = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/^TNX", headers=headers, timeout=5)
-        price = yield_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
-        data["us10y"] = f"{price}%"
-    except Exception:
-        pass
+        # 2. US 10-Year Bond Yield
+        try:
+            yield_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/^TNX", timeout=5)
+            price = yield_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
+            data["us10y"] = f"{price}%"
+        except Exception:
+            pass
 
-    # 3. US Dollar Index
-    try:
-        dxy_req = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB", headers=headers, timeout=5)
-        price = dxy_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
-        data["dxy"] = f"{price}"
-    except Exception:
-        pass
+        # 3. US Dollar Index
+        try:
+            dxy_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB", timeout=5)
+            price = dxy_req.json()['chart']['result'][0]['meta']['regularMarketPrice']
+            data["dxy"] = f"{price}"
+        except Exception:
+            pass
 
-    # 4. Official Federal Reserve Effective Target Range via New York Fed API
-    try:
-        fed_req = requests.get("https://markets.newyorkfed.org/api/ambs/all/latest.json", headers=headers, timeout=5)
-        if fed_req.status_code == 200:
-            data["fed_rate"] = "3.50% - 3.75%"
-    except Exception:
-        pass
+        # 4. Official Federal Reserve Effective Target Range via New York Fed API
+        try:
+            fed_req = session.get("https://markets.newyorkfed.org/api/ambs/all/latest.json", timeout=5)
+            if fed_req.status_code == 200:
+                data["fed_rate"] = "3.50% - 3.75%"
+        except Exception:
+            pass
 
-    # 5. RBI Interest Rate Context Verification via Financial Feed Structures
-    try:
-        rbi_req = requests.get("https://query1.finance.yahoo.com/v8/finance/chart/INR=X", headers=headers, timeout=5)
-        if rbi_req.status_code == 200:
-            data["rbi_rate"] = "5.25%"
-    except Exception:
-        pass
+        # 5. RBI Interest Rate Context Verification via Financial Feed Structures
+        try:
+            rbi_req = session.get("https://query1.finance.yahoo.com/v8/finance/chart/INR=X", timeout=5)
+            if rbi_req.status_code == 200:
+                data["rbi_rate"] = "5.25%"
+        except Exception:
+            pass
 
     return data
 
@@ -116,12 +119,13 @@ def generate_ai_summary(prices, narratives):
     - Every sentence in the main sections must be dense with hard statistics, macro numbers, historical correlations, or explicit tactical sector outcomes. No filler text.
     - Prioritize a balanced macro view with heavy weightage on Indian equity market impacts.
 
-    STRICT BOLDING AND LAYOUT RULES FOR SECTORS:
-    - ONLY the sector names themselves must be bolded. 
-    - The structural definition text or description immediately following the sector name MUST NOT contain bold markdown asterisks (**). Keep description text entirely normal.
-    - Example of correct format: * **IT Services**: A DXY at 99.807 provides tailwinds for export-oriented margins...
+    STRICT BOLDING AND LAYOUT RULES FOR SECTORS AND PIVOT TRIGGERS:
+    - ONLY the sector names or conditional triggers themselves must be bolded. 
+    - The structural definition text or description immediately following the bold element MUST NOT contain bold markdown asterisks (**). Keep description text entirely normal.
+    - Example of correct format for Sector: * **IT Services**: A DXY at 99.807 provides tailwinds for export-oriented margins...
+    - Example of correct format for Pivot Trigger: * 🤝 **If Peace Deal Finalizes**: Crude slides to $70, triggering massive IT rally.
     - Do NOT put a blank line or a new paragraph break immediately after a bullet point (*). Keep the bullet point and its text on the exact same line.
-    - Keep the "Sector Impacts" header entirely on a single line.
+    - Keep structural section headers entirely on their own single line.
 
     --- GENERATE AND OUTPUT FILE CONTENT FOLLOWING THIS STRUCTURE ONLY ---
 
@@ -146,6 +150,10 @@ def generate_ai_summary(prices, narratives):
     * **[Insert Sector 2]**: Provide a highly specific, 1-sentence actionable trade reason linked directly to raw data metrics. No bold text inside this description sentence.
     * **[Insert Sector 3]**: Provide a highly specific, 1-sentence actionable trade reason linked directly to raw data metrics. No bold text inside this description sentence.
 
+    📊 **SUMMARY CHECKLIST & PIVOT TRIGGERS**
+    * 🤝 **[Insert Bullish/Peace Macro Condition]**: Provide a highly precise, 1-sentence conditional macro trigger outlining a major scenario shift (e.g., peace breakthrough, unexpected commodity drops, or sudden Fed policy pivots) and its direct domino effect on a key Indian stock index or specific market sector. No bold text inside the description statement.
+    * ⚠️ **[Insert Bearish/Escalation Macro Condition]**: Provide a highly precise, 1-sentence conditional macro trigger outlining an opposing risk scenario shift (e.g., breakdown in talks, crude testing technical resistance, or sharp spikes in global yields) and how it accelerates domestic volatility or capital outflows. No bold text inside the description statement.
+
     🌮 **Donald's Wildcard Corner**
     * 🗣️ **The Presidential Proclamation**: Write a funny, highly satirical, over-the-top, fictional parody quote mimicking Donald Trump's signature speaking style (using words like "tremendous", "nobody knows more about", "beautiful"). The premise MUST showcase him starting off talking tough about oil, tariffs, or central bank interest rates, but then completely chickens out at the end using a hilarious, fragile excuse (e.g., claiming he's walking away from the negotiation or conflict because he needs to check out a taco stand, or because the taco makers were too nice to fight, or running away to protect his beautiful taco recipes). Keep it to exactly 2 punchy, highly entertaining sentences.
     """
@@ -169,14 +177,18 @@ def dispatch_safely_under_limit(content):
     current_chunk = []
     current_length = 0
 
+    def send_chunk(chunk):
+        payload = '\n'.join(chunk)
+        if payload.strip():
+            try:
+                requests.post(DISCORD_WEBHOOK_URL, json={"content": payload}, timeout=5)
+            except Exception as e:
+                print(f"Failed to send to Discord: {e}")
+
     for paragraph in paragraphs:
         if current_length + len(paragraph) + 1 > max_chars:
-            payload = '\n'.join(current_chunk)
-            if payload.strip():
-                try:
-                    requests.post(DISCORD_WEBHOOK_URL, json={"content": payload}, timeout=5)
-                except Exception as e:
-                    print(f"Failed to send to Discord: {e}")
+            if current_chunk:
+                send_chunk(current_chunk)
             current_chunk = [paragraph]
             current_length = len(paragraph)
         else:
@@ -184,12 +196,7 @@ def dispatch_safely_under_limit(content):
             current_length += len(paragraph) + 1
 
     if current_chunk:
-        payload = '\n'.join(current_chunk)
-        if payload.strip():
-            try:
-                requests.post(DISCORD_WEBHOOK_URL, json={"content": payload}, timeout=5)
-            except Exception as e:
-                print(f"Failed to send to Discord: {e}")
+        send_chunk(current_chunk)
 
 if __name__ == "__main__":
     print("Scraping real-time market figures and updated policy rates...")
