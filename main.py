@@ -76,7 +76,7 @@ def generate_ai_summary(prices, narratives):
         news_context = "- Global markets are consolidating ahead of major upcoming central bank macro data updates."
 
     prompt = f"""
-    You are an expert global macro hedge fund strategist and financial analyst. 
+    You are an expert global macro hedge fund strategist and financial analyst specializing in the cross-currents between global macro variables and the Indian stock market (Nifty/Sensex/Dalal Street). 
     Analyze the following real-time market data and recent news headlines:
 
     MARKET DATA:
@@ -88,6 +88,8 @@ def generate_ai_summary(prices, narratives):
     {news_context}
 
     Based on this data, write a sophisticated, dynamic macro summary for a Discord channel.
+    Maintain a balanced approach between global macro news trends and their direct translation into the Indian stock market, giving a slight weightage to India impact.
+
     Follow this layout blueprint EXACTLY. 
 
     CRITICAL FORMATTING RULES FOR DISCORD:
@@ -98,25 +100,25 @@ def generate_ai_summary(prices, narratives):
     --- COPY THIS BLUEPRINT EXACTLY AND FILL IN THE BRACKETS ---
 
     ⚡ **Macro Flash: The 5 Pillars**
-    * 🏛️ **Interest Rates**: [Dynamic analysis based on bond yields/news]
-    * 🛢️ **Oil (Brent)**: ${prices['brent']:.2f} | [Dynamic trend, e.g., Bullish/Bearish and why]
-    * 💵 **Dollar Index (DXY)**: {prices['dxy']} | [Dynamic context impact]
-    * 📈 **US Bond Yields (10Y)**: {prices['us10y']} | [Dynamic impact on assets]
-    * 🎈 **Inflation**: [Synthesize current macro trends regarding inflation]
+    * 🏛️ **Interest Rates**: [Analyze global central bank positions and rate cuts, balanced directly with how this influences the RBI's repo rate policy or Indian banking liquidity]
+    * 🛢️ **Oil (Brent)**: ${prices['brent']:.2f} | [Define global supply/demand trends, directly mapping how it impacts India's fiscal deficit, inflation, and corporate margins]
+    * 💵 **Dollar Index (DXY)**: {prices['dxy']} | [Contextualize greenback global moves, highlighting the subsequent pressure or relief on the USD/INR currency pair and FII inflows]
+    * 📈 **US Bond Yields (10Y)**: {prices['us10y']} | [Provide global yield context and explain how narrowing/widening spreads affect Indian Government Bonds and equity market valuations]
+    * 🎈 **Inflation**: [Synthesize current global macro pricing data, contrasting it with India's domestic CPI trends and local consumption sentiment]
 
     📰 **Latest Global Context Indicators:**
-    [Provide a sharp 2-sentence synthesis of how current data and trends are shifting market sentiment]
+    [Provide a sharp 2-sentence synthesis tracking how these combined global forces will set up the near-term momentum or opening sentiment for Indian stock indices like Nifty]
 
     💼 **Sector Impacts: Winners & Losers**
     🟢 **Immediate Winners (Bullish)**
-    * **[Sector Name 1]**: [1-sentence reason why it wins based on macro data]
-    * **[Sector Name 2]**: [1-sentence reason why it wins based on macro data]
-    * **[Sector Name 3]**: [1-sentence reason why it wins based on DXY or Yield setups]
+    * **[Indian Sector/Industry 1]**: [1-sentence reason why it wins based on oil price or macro data, e.g., consumer goods, paints, auto]
+    * **[Indian Sector/Industry 2]**: [1-sentence reason why it wins based on oil price or macro data]
+    * **[Indian Sector/Industry 3]**: [1-sentence reason why it wins based on DXY, FII inflows, or Yield setups]
 
     🔴 **Immediate Losers (Bearish)**
-    * **[Sector Name 1]**: [1-sentence reason why it loses based on oil price or macro data]
-    * **[Sector Name 2]**: [1-sentence reason why it loses based on oil price or macro data]
-    * **[Sector Name 3]**: [1-sentence reason why it loses based on DXY or Yield setups]
+    * **[Indian Sector/Industry 1]**: [1-sentence reason why it loses based on oil price or macro data, e.g., upstream energy, export-driven IT]
+    * **[Indian Sector/Industry 2]**: [1-sentence reason why it loses based on oil price or macro data]
+    * **[Indian Sector/Industry 3]**: [1-sentence reason why it loses based on DXY, global growth slowdown, or Yield setups]
     """
 
     try:
