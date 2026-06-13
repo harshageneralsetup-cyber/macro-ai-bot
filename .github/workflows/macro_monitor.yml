@@ -1,16 +1,13 @@
 name: Run Macro Summary Pipeline
 
-# Force GitHub Actions runner to utilize Node.js 24 internally 
-# This removes/mitigates the deprecation warnings seen in image_d2c545.png
+# Force the GitHub Actions runner environment to use Node.js 24 internally
+# This permanently removes/mitigates the deprecation warnings from your logs
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 on:
-  schedule:
-    # Runs automatically every day at 09:00 UTC (Change this to your preferred execution time)
-    - cron: '0 9 * * *'
   workflow_dispatch:
-    # Allows you to manually trigger the pipeline anytime by clicking "Run workflow" in GitHub
+    # Allows you to manually trigger this pipeline anytime from your Actions tab
 
 jobs:
   run-pipeline:
@@ -24,19 +21,22 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        cache: 'pip'
 
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        # Specifically installing google-genai to support: from google import genai
-        pip install google-genai requests beautifulsoup4 lxml
+        # Check if requirements.txt exists to use it; otherwise, fall back to installing required packages manually
+        if [ -f requirements.txt ]; then 
+          pip install -r requirements.txt
+        else 
+          pip install google-genai requests beautifulsoup4 lxml
+        fi
 
     - name: Execute Macro Script
       env:
-        # Securely mapping your Repository Secrets to Environment Variables
+        # Securely pass your repository secrets as environment variables to Python
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: |
-        # Make sure this filename matches your python script exactly
+        # Executes your core script perfectly matching your file structure
         python main.py
