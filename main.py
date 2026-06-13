@@ -6,7 +6,6 @@ from google import genai
 
 # Fetch configurations securely from GitHub Environment Secrets
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
-# The SDK automatically uses GEMINI_API_KEY if it exists in the environment
 
 if not DISCORD_WEBHOOK_URL:
     print("❌ Error: DISCORD_WEBHOOK_URL is missing from environment variables.")
@@ -62,23 +61,22 @@ def fetch_live_news_narratives():
             headlines.append(f"- {title}")
     except Exception:
         headlines = [
-            "- Markets parsing recent macro data setups.",
-            "- Global commodity cross-currents drive local tracking ranges."
+            "- Shifting geopolitical headlines regarding a potential US-Iran peace agreement.",
+            "- Stubbornly high US inflation data forcing hawkish central bank re-evaluations."
         ]
     return "\n".join(headlines)
 
 def generate_ai_summary(prices, narratives):
-    """Feeds raw data and headlines into Gemini to generate a fluid, intelligent macro report."""
+    """Feeds raw data and headlines into Gemini to generate a fluid, intelligent macro report matching layout references."""
     
-    # If the narratives fallback was triggered, we give the AI a better default prompt context
     news_context = narratives
     if "parsing recent macro data setups" in narratives:
-        news_context = "- Global markets are consolidating ahead of major upcoming central bank macro data updates."
+        news_context = "- Global market risk sentiment remains highly sensitive to stubborn global pricing dynamics and shifting geopolitical risk premiums."
 
     prompt = f"""
-    You are an expert global macro hedge fund strategist and financial analyst. 
-    Analyze the following real-time market data and recent news headlines:
+    You are an expert global macro hedge fund strategist and financial analyst specializing in the economic cross-currents between Western macro variables and Indian Equities (Nifty/Dalal Street).
 
+    Analyze the following real-time market data and recent news headlines:
     MARKET DATA:
     - Brent Crude Oil: ${prices['brent']:.2f}
     - US 10-Year Bond Yield: {prices['us10y']}
@@ -87,36 +85,66 @@ def generate_ai_summary(prices, narratives):
     LATEST HEADLINES:
     {news_context}
 
-    Based on this data, write a sophisticated, dynamic macro summary for a Discord channel.
-    Follow this layout blueprint EXACTLY. 
+    Based on this data, write a sophisticated, dynamic macro summary matching the exact structural layout of the provided user reference image. 
+    Maintain a balanced approach between global news and Indian market impact, with a slight weightage towards India.
 
     CRITICAL FORMATTING RULES FOR DISCORD:
-    - Do NOT put a blank line or a new paragraph break immediately after a bullet point (*). 
-    - Keep the bullet point and its text on the exact same line.
-    - Keep the "Sector Impacts" header entirely on a single line.
+    - Avoid adding blank lines or markdown list items inside structural text blocks.
+    - Each pillar must have exactly 3 clean bold prefixes embedded directly in consecutive text lines: **The News:**, **Trajectory:**, and **India Alignment:**. Do not use secondary bullets or sub-bullets for them.
+    - Keep headers completely on a single line.
 
-    --- COPY THIS BLUEPRINT EXACTLY AND FILL IN THE BRACKETS ---
+    --- GENERATE EXACTLY TO THIS BLUEPRINT LAYOUT ---
 
-    ⚡ **Macro Flash: The 5 Pillars**
-    * 🏛️ **Interest Rates**: [Dynamic analysis based on bond yields/news]
-    * 🛢️ **Oil (Brent)**: ${prices['brent']:.2f} | [Dynamic trend, e.g., Bullish/Bearish and why]
-    * 💵 **Dollar Index (DXY)**: {prices['dxy']} | [Dynamic context impact]
-    * 📈 **US Bond Yields (10Y)**: {prices['us10y']} | [Dynamic impact on assets]
-    * 🎈 **Inflation**: [Synthesize current macro trends regarding inflation]
+    # Daily Macro News Summary (As of June 13, 2026)
 
-    📰 **Latest Global Context Indicators:**
-    [Provide a sharp 2-sentence synthesis of how current data and trends are shifting market sentiment]
+    [Write a concise introductory paragraph summarizing the last 24-48 hours of global market action, highlighting key thematic narratives like geopolitical developments or stubborn inflation based on live data.]
 
-    💼 **Sector Impacts: Winners & Losers**
-    🟢 **Immediate Winners (Bullish)**
-    * **[Sector Name 1]**: [1-sentence reason why it wins based on oil price or macro data]
-    * **[Sector Name 2]**: [1-sentence reason why it wins based on oil price or macro data]
-    * **[Sector Name 3]**: [1-sentence reason why it wins based on DXY or Yield setups]
+    Below is the real-time breakdown of the 5 macro pillars alongside immediate sector impacts for the global and Indian economies.
 
-    🔴 **Immediate Losers (Bearish)**
-    * **[Sector Name 1]**: [1-sentence reason why it loses based on oil price or macro data]
-    * **[Sector Name 2]**: [1-sentence reason why it loses based on oil price or macro data]
-    * **[Sector Name 3]**: [1-sentence reason why it loses based on DXY or Yield setups]
+    ---
+
+    ## 1. Macro News Flash: The 5 Pillars
+
+    ### 🏛️ Interest Rate Trajectory (Short-End & Long-End)
+    * **The News:** [Analyze central bank decisions, job market updates, and expectations regarding timelines for key rate cuts based on headlines]
+    * **Trajectory:** [State the clear trend line, e.g., "higher for longer", upcoming FOMC tone expectations, and target ranges]
+    * **India Alignment:** [Explain the Reserve Bank of India's (RBI) cautious stance, repo rate paths to defend the Rupee, or implications for local bond curves]
+
+    ### 🛢️ Oil Prices Trajectory (Brent Crude)
+    * **The News:** Brent crude is trading around ${prices['brent']:.2f}. [Explain recent drops, peaks, or underlying geopolitical drivers like Middle East draft pact movements]
+    * **Trajectory:** [Highlight expected volatility boundaries relative to major structural thresholds like the $90 or $100 risk levels]
+    * **India Alignment:** [Detail the specific impact on India's current account deficit (CAD), corporate input lines, or retail inflation parameters]
+
+    ### 💵 US Dollar Index (DXY)
+    * **The News:** The US Dollar Index (DXY) is holding steady around {prices['dxy']}. [Contextualize current greenback resilience or consolidation bounds]
+    * **Trajectory:** [Explain the trend relative to key resistance zones or support numbers using recent inflation markers]
+    * **India Alignment:** [Detail the direct relief or pressure on the USD/INR currency peg and subsequent FII allocation tendencies]
+
+    ### 📈 US Bond Yields
+    * **The News:** Treasury yields are sitting at {prices['us10y']}. [Outline recent sharp back-and-forth swings or basis point movements]
+    * **Trajectory:** [Discuss underlying drivers like hawkish central bank committees refusing to ease policy anytime soon]
+    * **India Alignment:** [Analyze how changes in the yield spread affect Indian Government Bonds or foreign portfolio investment choices]
+
+    ### 🎈 Inflation (Global, US, India)
+    * **The News:** [Synthesize multi-year high core prints or accelerating price surges across key global economic regions]
+    * **Trajectory:** [Highlight whether global inflation dynamics are cooling or remain sticky heading into subsequent quarters]
+    * **India Alignment:** [Provide a contrast highlighting how India serves as a well-behaved outlier with retail prints giving structural comfort to local authorities]
+
+    ---
+
+    ## 2. Immediate Sector Impacts (Global & India)
+
+    The convergence of shifting asset classes, commodity price actions, and interest rate paths creates clear winners and losers across industries today:
+
+    ### 🟢 Sectors Experiencing Positive Winds
+    * **Indian Paint, Tyres, & Aviation (Oil Beneficiaries):** [Explain how specific drops or trends in oil lower raw material input costs and expand operating margins]
+    * **Indian Public Sector Banks & Fixed Income (Bond Markets):** [Explain how steady or flattening domestic bond yields protect bank treasuries from mark-to-market losses]
+    * **Automobile & Logistics:** [Explain how stable or lower input cost environments lift consumer buying sentiment and remove demand barriers]
+
+    ### 🔴 Sectors Facing Headwinds
+    * **Oil Exploration & Upstream Energy (ONGC, Reliance, Global Oil Majors):** [Explain how price adjustments beneath key thresholds compress realization rates and impact EPS metrics]
+    * **Information Technology (IT Services) & Tech Startups:** [Explain how delayed central bank pivots keep Western corporate capital expenditure restrictive, delaying local deal sign-offs]
+    * **Exporters (Textiles, Gems & Jewelry):** [Explain how stubborn inflation in major Western regions pinches consumer real incomes and hurts discretionary spending on imported retail goods]
     """
 
     try:
