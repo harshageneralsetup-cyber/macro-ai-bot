@@ -69,6 +69,12 @@ def fetch_live_news_narratives():
 
 def generate_ai_summary(prices, narratives):
     """Feeds raw data and headlines into Gemini to generate a fluid, intelligent macro report."""
+    
+    # If the narratives fallback was triggered, we give the AI a better default prompt context
+    news_context = narratives
+    if "parsing recent macro data setups" in narratives:
+        news_context = "- Global markets are consolidating ahead of major upcoming central bank macro data updates."
+
     prompt = f"""
     You are an expert global macro hedge fund strategist and financial analyst. 
     Analyze the following real-time market data and recent news headlines:
@@ -79,31 +85,38 @@ def generate_ai_summary(prices, narratives):
     - US Dollar Index (DXY): {prices['dxy']}
 
     LATEST HEADLINES:
-    {narratives}
+    {news_context}
 
     Based on this data, write a sophisticated, dynamic macro summary for a Discord channel.
-    Follow this layout blueprint EXACTLY, but dynamicize all descriptions based on the actual figures provided:
+    Follow this layout blueprint EXACTLY. 
+
+    CRITICAL FORMATTING RULES FOR DISCORD:
+    - Do NOT put a blank line or a new paragraph break immediately after a bullet point (*). 
+    - Keep the bullet point and its text on the exact same line.
+    - Keep the "Sector Impacts" header entirely on a single line.
+
+    --- COPY THIS BLUEPRINT EXACTLY AND FILL IN THE BRACKETS ---
 
     ⚡ **Macro Flash: The 5 Pillars**
-    * 🏛️ **Interest Rates**: [Dynamic analysis of current stance based on bond yields/news]
-    * 🛢️ **Oil (Brent)**: ${prices['brent']:.2f} | [Dynamic trend analysis, e.g., Bullish/Bearish and why]
+    * 🏛️ **Interest Rates**: [Dynamic analysis based on bond yields/news]
+    * 🛢️ **Oil (Brent)**: ${prices['brent']:.2f} | [Dynamic trend, e.g., Bullish/Bearish and why]
     * 💵 **Dollar Index (DXY)**: {prices['dxy']} | [Dynamic context impact]
     * 📈 **US Bond Yields (10Y)**: {prices['us10y']} | [Dynamic impact on assets]
     * 🎈 **Inflation**: [Synthesize current macro trends regarding inflation]
 
     📰 **Latest Global Context Indicators:**
-    [Provide a 2-3 sentence synthesis of how the headlines above are shifting market sentiment]
+    [Provide a sharp 2-sentence synthesis of how current data and trends are shifting market sentiment]
 
     💼 **Sector Impacts: Winners & Losers**
     🟢 **Immediate Winners (Bullish)**
-    * [List 2 specific stock sectors or industries winning because of the current oil price (${prices['brent']:.2f}) and macro data, with a 1-sentence reason why]
-    * [List 1 more sector winning due to current DXY or Yield setups]
+    * **[Sector Name 1]**: [1-sentence reason why it wins based on oil price or macro data]
+    * **[Sector Name 2]**: [1-sentence reason why it wins based on oil price or macro data]
+    * **[Sector Name 3]**: [1-sentence reason why it wins based on DXY or Yield setups]
 
     🔴 **Immediate Losers (Bearish)**
-    * [List 2 specific stock sectors or industries hurt by the current oil price (${prices['brent']:.2f}) and macro data, with a 1-sentence reason why]
-    * [List 1 more sector hurt due to current DXY or Yield setups]
-
-    Keep the tone professional, sharp, and concise. Do not use markdown headers other than the ones provided in the blueprint.
+    * **[Sector Name 1]**: [1-sentence reason why it loses based on oil price or macro data]
+    * **[Sector Name 2]**: [1-sentence reason why it loses based on oil price or macro data]
+    * **[Sector Name 3]**: [1-sentence reason why it loses based on DXY or Yield setups]
     """
 
     try:
