@@ -6,7 +6,7 @@ on:
     # 03:15 AM UTC (8:45 AM IST)
     # 09:00 AM UTC (2:30 PM IST)
     # 05:00 PM UTC (10:30 PM IST)
-    - cron: '45 3 * * 1-5'
+    - cron: '15 3 * * 1-5'
     - cron: '0 9 * * 1-5'
     - cron: '0 17 * * 1-5'
   workflow_dispatch: # Allows you to trigger the script manually from GitHub UI anytime
