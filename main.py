@@ -226,4 +226,4 @@ if __name__ == "__main__":
     final_payload = generate_ai_summary(market_metrics, news_briefs)
     print("Streaming directly into active Discord client feed...")
     dispatch_safely_under_limit(final_payload)
-    print("Process executed successfully.")
+    print("Process executed successfully.")   
