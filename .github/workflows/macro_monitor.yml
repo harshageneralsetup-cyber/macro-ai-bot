@@ -2,10 +2,14 @@ name: AI Macro Briefing Automation
 
 on:
   schedule:
-    # Shifted to odd, clean minute tracks to bypass peak queue delays:
-    - cron: '17 3 * * 1-5'   # Executes around 8:47 AM IST (Monday - Friday)
-    - cron: '8 9 * * 1-5'    # Executes around 2:38 PM IST (Monday - Friday)
-    - cron: '3 17 * * 1-5'   # Executes around 10:33 PM IST (Monday - Friday)
+    # Test Window 1: Triggers at 4:43 PM IST (11:13 UTC)
+    - cron: '13 11 * * 1'
+    
+    # Test Window 2: Triggers at 4:45 PM IST (11:15 UTC)
+    - cron: '15 11 * * 1'
+    
+    # Test Window 3: Triggers at 4:47 PM IST (11:17 UTC)
+    - cron: '17 11 * * 1'
   workflow_dispatch:
 
 jobs:
