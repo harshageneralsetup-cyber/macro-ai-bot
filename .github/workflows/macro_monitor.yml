@@ -2,14 +2,15 @@ name: AI Macro Briefing Automation
 
 on:
   schedule:
-    # 1. Morning Briefing: ~8:47 AM IST (03:17 UTC)
+    # 1. Morning Briefing: 03:17 AM GMT / Server Time (8:47 AM IST)
     - cron: '17 3 * * 1-5'
     
-    # 2. Afternoon Briefing: ~2:38 PM IST (09:08 UTC)
+    # 2. Afternoon Briefing: 09:08 AM GMT / Server Time (2:38 PM IST)
     - cron: '8 9 * * 1-5'
     
-    # 3. Night Briefing: ~10:33 PM IST (17:03 UTC)
+    # 3. Night Briefing: 05:03 PM GMT / Server Time (10:33 PM IST)
     - cron: '3 17 * * 1-5'
+    
   workflow_dispatch:
 
 jobs:
