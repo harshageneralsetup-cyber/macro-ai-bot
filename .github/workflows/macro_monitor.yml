@@ -1,17 +1,7 @@
 name: AI Macro Briefing Automation
 
 on:
-  schedule:
-    # Test Slot 1: 10:02 AM IST (04:32 AM GMT)
-    - cron: '32 4 * * 2'
-    
-    # Test Slot 2: 10:04 AM IST (04:34 AM GMT)
-    - cron: '34 4 * * 2'
-    
-    # Test Slot 3: 10:06 AM IST (04:36 AM GMT)
-    - cron: '36 4 * * 2'
-    
-  workflow_dispatch:
+  workflow_dispatch:   # This allows your external cron service to trigger it instantly via API
 
 jobs:
   run-pipeline:
